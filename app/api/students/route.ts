@@ -31,7 +31,11 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Failed to save student data to Supabase:', error);
     return NextResponse.json(
-      { error: 'Failed to save data', details: error.message },
+      { 
+        error: 'Gagal menyimpan data ke Database Cloud', 
+        details: error.message || 'Cek koneksi Supabase Anda',
+        hint: 'Pastikan tabel students sudah dibuat dan RLS diizinkan'
+      },
       { status: 500 }
     );
   }
@@ -51,7 +55,11 @@ export async function GET() {
   } catch (error: any) {
     console.error('Failed to fetch students from Supabase:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch data', details: error.message },
+      { 
+        error: 'Gagal mengambil data dari Database Cloud', 
+        details: error.message || 'Cek koneksi Supabase Anda',
+        hint: 'Pastikan tabel students sudah dibuat di Supabase SQL Editor'
+      },
       { status: 500 }
     );
   }
