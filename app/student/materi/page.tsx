@@ -150,12 +150,6 @@ export default function MateriLiterasi() {
       if (newFinished.length === materiData.length) {
         localStorage.setItem('materi_finished', 'true');
       }
-
-      // Auto-move to next tab if exists
-      const currentIndex = materiData.findIndex(m => m.id === id);
-      if (currentIndex < materiData.length - 1) {
-        setActiveTab(materiData[currentIndex + 1].id);
-      }
     }
   };
 
@@ -444,17 +438,31 @@ export default function MateriLiterasi() {
                         setActiveTab(materiData[idx + 1].id);
                       }}
                       style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
                         padding: '1rem 2rem',
                         borderRadius: '12px',
-                        background: 'rgba(255,255,255,0.05)',
+                        background: 'rgba(102, 252, 241, 0.1)',
                         color: 'var(--accent-cyan)',
                         fontWeight: '700',
                         border: '1px solid var(--accent-cyan)',
                         cursor: 'pointer',
-                        transition: 'all 0.3s'
+                        transition: 'all 0.3s',
+                        boxShadow: '0 0 15px rgba(102, 252, 241, 0.2)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'var(--accent-cyan)';
+                        e.currentTarget.style.color = '#000';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(102, 252, 241, 0.1)';
+                        e.currentTarget.style.color = 'var(--accent-cyan)';
+                        e.currentTarget.style.transform = 'translateY(0)';
                       }}
                     >
-                      Lanjut ke Materi Berikutnya
+                      Lanjut ke Materi Berikutnya <Play size={18} fill="currentColor" />
                     </button>
                   )}
                 </div>

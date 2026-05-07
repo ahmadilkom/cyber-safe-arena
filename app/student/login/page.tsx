@@ -113,16 +113,27 @@ export default function StudentLogin() {
             <label htmlFor="className">Kelas</label>
             <div style={{ position: 'relative' }}>
               <Users size={18} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
-              <input
+              <select
                 id="className"
-                type="text"
                 className="input-field w-full"
-                style={{ paddingLeft: '40px' }}
-                placeholder="Ketikkan kelas (contoh: 9.1)" 
+                style={{ paddingLeft: '40px', appearance: 'none', cursor: 'pointer' }}
                 value={className}
                 onChange={(e) => setClassName(e.target.value)}
                 required
-              />
+              >
+                <option value="" disabled>Pilih Kelas</option>
+                <option value="7.1">7.1</option>
+                <option value="7.2">7.2</option>
+                <option value="7.3">7.3</option>
+                <option value="8.1">8.1</option>
+                <option value="8.2">8.2</option>
+                <option value="8.3">8.3</option>
+                <option value="8.4">8.4</option>
+                <option value="9.1">9.1</option>
+                <option value="9.2">9.2</option>
+                <option value="9.3">9.3</option>
+              </select>
+              <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', opacity: 0.5, borderTop: '6px solid white', borderLeft: '5px solid transparent', borderRight: '5px solid transparent' }}></div>
             </div>
           </div>
 

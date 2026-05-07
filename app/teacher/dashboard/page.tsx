@@ -16,6 +16,7 @@ export default function TeacherDashboard() {
   const router = useRouter();
   const [students, setStudents] = useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterClass, setFilterClass] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
@@ -96,8 +97,14 @@ export default function TeacherDashboard() {
     );
   }
 
-  const averageScore = students.length > 0 
-    ? Math.round(students.reduce((acc, curr) => acc + curr.score, 0) / students.length)
+  const filteredStudents = students.filter(s => {
+    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesClass = filterClass === '' || s.class_name === filterClass;
+    return matchesSearch && matchesClass;
+  });
+
+  const averageScore = filteredStudents.length > 0 
+    ? Math.round(filteredStudents.reduce((acc, curr) => acc + curr.score, 0) / filteredStudents.length)
     : 0;
 
   return (
@@ -142,8 +149,10 @@ export default function TeacherDashboard() {
               <Users size={32} color="var(--accent-cyan)" />
             </div>
             <div>
-              <p className="text-secondary mb-1" style={{ fontSize: '0.9rem' }}>Total Siswa Bermain</p>
-              <h2 style={{ fontSize: '2rem', margin: 0 }}>{students.length}</h2>
+              <p className="text-secondary mb-1" style={{ fontSize: '0.9rem' }}>
+                {filterClass ? `Siswa Kelas ${filterClass}` : 'Total Siswa Bermain'}
+              </p>
+              <h2 style={{ fontSize: '2rem', margin: 0 }}>{filteredStudents.length}</h2>
             </div>
           </div>
           
@@ -162,7 +171,7 @@ export default function TeacherDashboard() {
           <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, minWidth: '250px' }}>
               <h3 style={{ margin: 0, whiteSpace: 'nowrap' }}>Daftar Nilai Siswa</h3>
-              <div style={{ position: 'relative', flex: 1 }}>
+               <div style={{ position: 'relative', flex: 1 }}>
                 <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
                 <input 
                   type="text" 
@@ -190,6 +199,32 @@ export default function TeacherDashboard() {
                   }}
                 />
               </div>
+              <select 
+                value={filterClass}
+                onChange={(e) => setFilterClass(e.target.value)}
+                style={{
+                  padding: '8px 12px',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '8px',
+                  color: '#fff',
+                  fontSize: '0.9rem',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="">Semua Kelas</option>
+                <option value="7.1">7.1</option>
+                <option value="7.2">7.2</option>
+                <option value="7.3">7.3</option>
+                <option value="8.1">8.1</option>
+                <option value="8.2">8.2</option>
+                <option value="8.3">8.3</option>
+                <option value="8.4">8.4</option>
+                <option value="9.1">9.1</option>
+                <option value="9.2">9.2</option>
+                <option value="9.3">9.3</option>
+              </select>
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button 
@@ -225,16 +260,14 @@ export default function TeacherDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {students.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 ? (
+                {filteredStudents.length === 0 ? (
                   <tr>
                     <td colSpan={5} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                      {searchTerm ? `Tidak ada siswa dengan nama "${searchTerm}"` : 'Belum ada siswa yang bermain.'}
+                      {searchTerm || filterClass ? 'Tidak ada data yang sesuai filter' : 'Belum ada siswa yang bermain.'}
                     </td>
                   </tr>
                 ) : (
-                  students
-                    .filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .map((student) => (
+                  filteredStudents.map((student) => (
                     <tr key={student.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                       <td style={{ padding: '1rem 1.5rem', fontWeight: '500' }}>{student.name}</td>
                       <td style={{ padding: '1rem 1.5rem' }}>{student.class_name}</td>
