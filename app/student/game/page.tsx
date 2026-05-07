@@ -406,7 +406,7 @@ export default function Game() {
             <Wrench size={20} color="var(--accent-cyan)" />
             <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-secondary)' }}>Toolkit Ekstraksi</h3>
           </div>
-          <div className="flex gap-4">
+          <div className="flex-mobile-col" style={{ display: 'flex', gap: '1rem' }}>
             <button
               onClick={handleFiftyFifty}
               disabled={fiftyFiftyCount <= 0 || showFeedback || hiddenOptions.length > 0}

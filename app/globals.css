@@ -226,15 +226,16 @@ h1, h2, h3, h4 {
   .grid-cols-mobile-1 {
     grid-template-columns: 1fr !important;
   }
+
+  .flex-mobile-col {
+    flex-direction: column !important;
+  }
 }
 
 @media (max-width: 480px) {
   h1 { font-size: 2rem !important; }
   p { font-size: 0.9rem !important; }
   
-  .flex-mobile-col {
-    flex-direction: column !important;
-  }
 }
 
 /* Custom Scrollbar for Cyberpunk feel */
