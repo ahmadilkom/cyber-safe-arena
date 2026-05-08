@@ -102,7 +102,7 @@ export default function StudentResult() {
               color: isLulus ? 'var(--success)' : '#ffffff',
               textShadow: isLulus ? '0 0 20px rgba(46, 204, 113, 0.5)' : 'none'
             }}>
-              {score.toLocaleString()}
+              {score.toLocaleString('id-ID')}
             </div>
           </div>
 

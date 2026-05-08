@@ -280,7 +280,7 @@ export default function TeacherDashboard() {
                           fontWeight: 'bold',
                           fontSize: '0.9rem'
                         }}>
-                          {student.score}
+                          {student.score.toLocaleString('id-ID')}
                         </span>
                       </td>
                       <td style={{ padding: '1rem 1.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
