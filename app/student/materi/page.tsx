@@ -95,6 +95,7 @@ export default function MateriLiterasi() {
   const [activeTab, setActiveTab] = useState(materiData[0].id);
   const [finishedTabs, setFinishedTabs] = useState<string[]>([]);
   const [isYouTubeFinished, setIsYouTubeFinished] = useState(false);
+  const [countdown, setCountdown] = useState(60);
 
   useEffect(() => {
     // Load YouTube API
@@ -136,9 +137,33 @@ export default function MateriLiterasi() {
   useEffect(() => {
     const saved = localStorage.getItem('finished_materi_tabs');
     if (saved) {
-      setFinishedTabs(JSON.parse(saved));
+      const parsed = JSON.parse(saved);
+      setFinishedTabs(parsed);
+      if (parsed.includes('video')) {
+        setIsYouTubeFinished(true);
+      }
     }
   }, []);
+
+  // Timer logic
+  useEffect(() => {
+    // Reset timer when switching tabs
+    if (!finishedTabs.includes(activeTab) && activeTab !== 'video') {
+      setCountdown(60);
+    } else {
+      setCountdown(0);
+    }
+  }, [activeTab, finishedTabs]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [countdown]);
 
   const handleMarkAsFinished = (id: string) => {
     if (!finishedTabs.includes(id)) {
@@ -372,35 +397,44 @@ export default function MateriLiterasi() {
 
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   {!finishedTabs.includes(activeTab) ? (
-                    <button
-                      onClick={() => handleMarkAsFinished(activeTab)}
-                      disabled={currentMateri.isVideo && !isYouTubeFinished}
-                      style={{
-                        padding: '1rem 2rem',
-                        borderRadius: '12px',
-                        background: (currentMateri.isVideo && !isYouTubeFinished) ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)',
-                        color: (currentMateri.isVideo && !isYouTubeFinished) ? 'rgba(255,255,255,0.2)' : '#fff',
-                        fontWeight: '700',
-                        border: '1px solid',
-                        borderColor: (currentMateri.isVideo && !isYouTubeFinished) ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.1)',
-                        cursor: (currentMateri.isVideo && !isYouTubeFinished) ? 'not-allowed' : 'pointer',
-                        transition: 'all 0.3s'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!(currentMateri.isVideo && !isYouTubeFinished)) {
-                          e.currentTarget.style.background = `${currentMateri.color}20`;
-                          e.currentTarget.style.borderColor = currentMateri.color;
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!(currentMateri.isVideo && !isYouTubeFinished)) {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                        }
-                      }}
-                    >
-                      {currentMateri.isVideo && !isYouTubeFinished ? 'Sedang Menonton...' : 'Sudah Selesai Dipelajari'}
-                    </button>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <button
+                        onClick={() => handleMarkAsFinished(activeTab)}
+                        disabled={(currentMateri.isVideo && !isYouTubeFinished) || countdown > 0}
+                        style={{
+                          padding: '1rem 2rem',
+                          borderRadius: '12px',
+                          background: ((currentMateri.isVideo && !isYouTubeFinished) || countdown > 0) ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)',
+                          color: ((currentMateri.isVideo && !isYouTubeFinished) || countdown > 0) ? 'rgba(255,255,255,0.2)' : '#fff',
+                          fontWeight: '700',
+                          border: '1px solid',
+                          borderColor: ((currentMateri.isVideo && !isYouTubeFinished) || countdown > 0) ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.1)',
+                          cursor: ((currentMateri.isVideo && !isYouTubeFinished) || countdown > 0) ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!((currentMateri.isVideo && !isYouTubeFinished) || countdown > 0)) {
+                            e.currentTarget.style.background = `${currentMateri.color}20`;
+                            e.currentTarget.style.borderColor = currentMateri.color;
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!((currentMateri.isVideo && !isYouTubeFinished) || countdown > 0)) {
+                            e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                          }
+                        }}
+                      >
+                        {countdown > 0 ? `Tunggu (${countdown}s)` : 
+                         (currentMateri.isVideo && !isYouTubeFinished ? 'Sedang Menonton...' : 'Sudah Selesai Dipelajari')}
+                      </button>
+                      
+                      {currentMateri.isVideo && !isYouTubeFinished && (
+                        <p style={{ color: 'var(--danger)', fontSize: '0.85rem', textAlign: 'center', margin: 0, opacity: 0.8 }}>
+                          ⚠️ Tonton video hingga detik terakhir untuk membuka tombol
+                        </p>
+                      )}
+                    </div>
                   ) : activeTab === materiData[materiData.length - 1].id ? (
                     <button
                       onClick={() => router.push('/student/login')}

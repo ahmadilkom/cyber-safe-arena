@@ -563,7 +563,7 @@ export default function Game() {
           >
             <div className="flex justify-between items-start mb-2">
               <h3 style={{ color: currentScenario.options[selectedOption!].isCorrect ? 'var(--success)' : 'var(--danger)', fontSize: '1.4rem' }}>
-                {currentScenario.options[selectedOption!].isCorrect ? 'Serangan Berhasil Ditepis!' : 'Anda Terkena Jebakan!'}
+                {currentScenario.options[selectedOption!].isCorrect ? 'Serangan Anda berhasil memusnahkan musuh' : 'Anda terkena serangan musuh'}
               </h3>
               {currentScenario.options[selectedOption!].isCorrect && (
                 <div className="font-bold text-xl text-yellow-400">+{earnedPoints} Poin</div>

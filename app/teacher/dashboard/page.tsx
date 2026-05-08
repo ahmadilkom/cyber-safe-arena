@@ -110,8 +110,8 @@ export default function TeacherDashboard() {
   return (
     <main className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '4rem' }}>
       <div className="w-full max-w-4xl">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-gradient m-0" style={{ fontSize: '2.5rem' }}>Dashboard Guru</h1>
+        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+          <h1 className="text-gradient m-0 responsive-h1">Dashboard Guru</h1>
           <button 
             onClick={() => setShowLogoutConfirm(true)} 
             className="btn-secondary" 
