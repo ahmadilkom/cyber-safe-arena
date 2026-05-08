@@ -10,6 +10,7 @@ interface Student {
   class_name: string;
   score: number;
   played_at: string;
+  status?: string;
 }
 
 export default function TeacherDashboard() {
@@ -22,7 +23,7 @@ export default function TeacherDashboard() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -117,7 +118,7 @@ export default function TeacherDashboard() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedStudents = filteredStudents.slice(startIndex, startIndex + itemsPerPage);
 
-  const averageScore = filteredStudents.length > 0 
+  const averageScore = filteredStudents.length > 0
     ? Math.round(filteredStudents.reduce((acc, curr) => acc + curr.score, 0) / filteredStudents.length)
     : 0;
 
@@ -126,11 +127,11 @@ export default function TeacherDashboard() {
       <div className="w-full max-w-4xl">
         <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
           <h1 className="text-gradient m-0 responsive-h1">Dashboard Guru</h1>
-          <button 
-            onClick={() => setShowLogoutConfirm(true)} 
-            className="btn-secondary" 
-            style={{ 
-              padding: '10px 20px', 
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            className="btn-secondary"
+            style={{
+              padding: '10px 20px',
               fontSize: '0.9rem',
               display: 'flex',
               alignItems: 'center',
@@ -169,7 +170,7 @@ export default function TeacherDashboard() {
               <h2 style={{ fontSize: '2rem', margin: 0 }}>{filteredStudents.length}</h2>
             </div>
           </div>
-          
+
           <div className="glass-panel" style={{ flex: '1', minWidth: '200px', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{ background: 'rgba(155, 81, 224, 0.1)', padding: '1rem', borderRadius: '12px' }}>
               <Trophy size={32} color="var(--accent-purple)" />
@@ -182,23 +183,23 @@ export default function TeacherDashboard() {
         </div>
 
         <div className="glass-panel" style={{ overflow: 'hidden' }}>
-          <div style={{ 
-            padding: '1.5rem', 
-            borderBottom: '1px solid var(--glass-border)', 
-            display: 'flex', 
-            flexDirection: 'row', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            flexWrap: 'wrap', 
-            gap: '1rem' 
+          <div style={{
+            padding: '1.5rem',
+            borderBottom: '1px solid var(--glass-border)',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '1rem'
           }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem', flex: '1', minWidth: '280px' }}>
               <h3 style={{ margin: 0, whiteSpace: 'nowrap', fontSize: '1.25rem' }}>Daftar Nilai Siswa</h3>
-               <div style={{ position: 'relative', flex: 1 }}>
+              <div style={{ position: 'relative', flex: 1 }}>
                 <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
-                <input 
-                  type="text" 
-                  placeholder="Cari nama siswa..." 
+                <input
+                  type="text"
+                  placeholder="Cari nama siswa..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   style={{
@@ -222,7 +223,7 @@ export default function TeacherDashboard() {
                   }}
                 />
               </div>
-              <select 
+              <select
                 value={filterClass}
                 onChange={(e) => setFilterClass(e.target.value)}
                 style={{
@@ -252,13 +253,13 @@ export default function TeacherDashboard() {
               </select>
             </div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <button 
-                onClick={() => setShowResetConfirm(true)} 
-                className="btn-secondary" 
-                style={{ 
-                  padding: '8px 16px', 
-                  border: '1px solid rgba(231, 76, 60, 0.3)', 
-                  background: 'rgba(231, 76, 60, 0.05)', 
+              <button
+                onClick={() => setShowResetConfirm(true)}
+                className="btn-secondary"
+                style={{
+                  padding: '8px 16px',
+                  border: '1px solid rgba(231, 76, 60, 0.3)',
+                  background: 'rgba(231, 76, 60, 0.05)',
                   color: 'var(--danger)',
                   display: 'flex',
                   alignItems: 'center',
@@ -268,15 +269,15 @@ export default function TeacherDashboard() {
               >
                 <Trash2 size={16} /> Reset Semua
               </button>
-              <button 
-                onClick={fetchStudents} 
-                className="btn-secondary" 
-                style={{ 
-                  padding: '8px 16px', 
-                  border: '1px solid rgba(255,255,255,0.1)', 
-                  background: 'rgba(255,255,255,0.05)', 
-                  display: 'flex', 
-                  alignItems: 'center', 
+              <button
+                onClick={fetchStudents}
+                className="btn-secondary"
+                style={{
+                  padding: '8px 16px',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.05)',
+                  display: 'flex',
+                  alignItems: 'center',
                   gap: '8px',
                   fontSize: '0.85rem'
                 }}
@@ -285,7 +286,7 @@ export default function TeacherDashboard() {
               </button>
             </div>
           </div>
-          
+
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
@@ -305,12 +306,22 @@ export default function TeacherDashboard() {
                     </td>
                   </tr>
                 ) : (
-                  paginatedStudents.map((student) => (
-                    <tr key={student.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                      <td style={{ padding: '1rem 1.5rem', fontWeight: '500' }}>{student.name}</td>
+                  paginatedStudents.map((student, index) => {
+                    const globalRank = startIndex + index + 1;
+                    const isFiltered = searchTerm !== '' || filterClass !== '';
+                    return (
+                      <tr key={student.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                        <td style={{ padding: '1rem 1.5rem', fontWeight: '500' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            {!isFiltered && globalRank === 1 && <span title="Juara 1" style={{ fontSize: '1.1rem' }}>🥇</span>}
+                            {!isFiltered && globalRank === 2 && <span title="Juara 2" style={{ fontSize: '1.1rem' }}>🥈</span>}
+                            {!isFiltered && globalRank === 3 && <span title="Juara 3" style={{ fontSize: '1.1rem' }}>🥉</span>}
+                            {student.name}
+                          </div>
+                        </td>
                       <td style={{ padding: '1rem 1.5rem' }}>{student.class_name}</td>
                       <td style={{ padding: '1rem 1.5rem' }}>
-                        <span style={{ 
+                        <span style={{
                           background: student.score >= 200 ? 'rgba(46, 204, 113, 0.2)' : 'rgba(231, 76, 60, 0.2)',
                           color: student.score >= 200 ? 'var(--success)' : 'var(--danger)',
                           padding: '4px 10px',
@@ -325,7 +336,7 @@ export default function TeacherDashboard() {
                         {new Date(student.played_at).toLocaleString('id-ID')}
                       </td>
                       <td style={{ padding: '1rem 1.5rem', textAlign: 'center' }}>
-                        <button 
+                        <button
                           onClick={() => setShowDeleteConfirm(student.id)}
                           style={{
                             background: 'rgba(231, 76, 60, 0.1)',
@@ -350,7 +361,8 @@ export default function TeacherDashboard() {
                         </button>
                       </td>
                     </tr>
-                  ))
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -358,11 +370,11 @@ export default function TeacherDashboard() {
 
           {/* Pagination Controls */}
           {filteredStudents.length > itemsPerPage && (
-            <div style={{ 
-              padding: '1rem 1.5rem', 
-              borderTop: '1px solid var(--glass-border)', 
-              display: 'flex', 
-              justifyContent: 'space-between', 
+            <div style={{
+              padding: '1rem 1.5rem',
+              borderTop: '1px solid var(--glass-border)',
+              display: 'flex',
+              justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
               gap: '1rem'
@@ -370,7 +382,7 @@ export default function TeacherDashboard() {
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
                 Menampilkan {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredStudents.length)} dari {filteredStudents.length} siswa
               </p>
-              
+
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <button
                   disabled={currentPage === 1}
@@ -387,7 +399,7 @@ export default function TeacherDashboard() {
                 >
                   Sebelumnya
                 </button>
-                
+
                 <div style={{ display: 'flex', gap: '4px' }}>
                   {[...Array(totalPages)].map((_, i) => {
                     const page = i + 1;
@@ -469,17 +481,17 @@ export default function TeacherDashboard() {
               <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Tindakan ini tidak dapat dibatalkan. Data nilai siswa akan hilang selamanya.</p>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button onClick={() => setShowDeleteConfirm(null)} style={{ flex: 1, padding: '0.85rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: '#fff', fontWeight: '700', cursor: 'pointer' }}>BATAL</button>
-                <button 
-                  onClick={() => handleDelete(showDeleteConfirm)} 
+                <button
+                  onClick={() => handleDelete(showDeleteConfirm)}
                   disabled={isDeleting}
-                  style={{ 
-                    flex: 1, 
-                    padding: '0.85rem', 
-                    borderRadius: '12px', 
-                    border: 'none', 
-                    background: 'linear-gradient(135deg, #e74c3c, #c0392b)', 
-                    color: '#fff', 
-                    fontWeight: '700', 
+                  style={{
+                    flex: 1,
+                    padding: '0.85rem',
+                    borderRadius: '12px',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #e74c3c, #c0392b)',
+                    color: '#fff',
+                    fontWeight: '700',
                     cursor: isDeleting ? 'not-allowed' : 'pointer',
                     opacity: isDeleting ? 0.7 : 1
                   }}
@@ -504,17 +516,17 @@ export default function TeacherDashboard() {
               </p>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button onClick={() => setShowResetConfirm(false)} style={{ flex: 1, padding: '1rem', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: '#fff', fontWeight: '700', cursor: 'pointer' }}>BATAL</button>
-                <button 
-                  onClick={handleResetAll} 
+                <button
+                  onClick={handleResetAll}
                   disabled={isDeleting}
-                  style={{ 
-                    flex: 1, 
-                    padding: '1rem', 
-                    borderRadius: '14px', 
-                    border: 'none', 
-                    background: 'linear-gradient(135deg, #ff4757, #ff6b81)', 
-                    color: '#fff', 
-                    fontWeight: '800', 
+                  style={{
+                    flex: 1,
+                    padding: '1rem',
+                    borderRadius: '14px',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #ff4757, #ff6b81)',
+                    color: '#fff',
+                    fontWeight: '800',
                     cursor: isDeleting ? 'not-allowed' : 'pointer',
                     boxShadow: '0 0 25px rgba(255, 71, 87, 0.5)'
                   }}
@@ -526,7 +538,8 @@ export default function TeacherDashboard() {
           </div>
         )}
       </div>
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes pulse-red {
           0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
           70% { box-shadow: 0 0 0 20px rgba(231, 76, 60, 0); }

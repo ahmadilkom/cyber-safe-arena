@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, className, score, avatar } = body;
+    const { name, className, score, avatar, status } = body;
 
     if (!name || !className || score === undefined) {
       return NextResponse.json(
@@ -16,11 +16,12 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from('students')
       .insert([
-        { 
-          name, 
-          class_name: className, 
-          score, 
-          avatar: avatar || 'Alpha' 
+        {
+          name,
+          class_name: className,
+          score,
+          avatar: avatar || 'Alpha',
+          status: status || 'game_over'
         }
       ])
       .select();
@@ -31,8 +32,8 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Failed to save student data to Supabase:', error);
     return NextResponse.json(
-      { 
-        error: 'Gagal menyimpan data ke Database Cloud', 
+      {
+        error: 'Gagal menyimpan data ke Database Cloud',
         details: error.message || 'Cek koneksi Supabase Anda',
         hint: 'Pastikan tabel students sudah dibuat dan RLS diizinkan'
       },
@@ -47,7 +48,7 @@ export async function GET() {
       .from('students')
       .select('*')
       .order('score', { ascending: false })
-      .order('played_at', { ascending: false });
+      .order('played_at', { ascending: true });
 
     if (error) throw error;
 
@@ -55,8 +56,8 @@ export async function GET() {
   } catch (error: any) {
     console.error('Failed to fetch students from Supabase:', error);
     return NextResponse.json(
-      { 
-        error: 'Gagal mengambil data dari Database Cloud', 
+      {
+        error: 'Gagal mengambil data dari Database Cloud',
         details: error.message || 'Cek koneksi Supabase Anda',
         hint: 'Pastikan tabel students sudah dibuat di Supabase SQL Editor'
       },
@@ -70,7 +71,7 @@ export async function DELETE(request: Request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     const all = searchParams.get('all');
-    
+
     if (all === 'true') {
       const { error } = await supabase
         .from('students')

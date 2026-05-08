@@ -55,7 +55,7 @@ export default function Game() {
       router.push('/student/login');
       return;
     }
-    
+
     const avatar = localStorage.getItem('student_avatar') || 'Hero';
     setPlayerName(avatar);
 
@@ -106,14 +106,14 @@ export default function Game() {
     const isCorrect = gameScenarios[currentStep].options[optionIndex].isCorrect;
 
     if (isCorrect) {
-      if (!isMuted) new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3').play().catch(() => {});
+      if (!isMuted) new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3').play().catch(() => { });
       const points = 100 + (combo * 50); // Base 100 + 50 per combo streak
       setEarnedPoints(points);
       setScore(prev => prev + points);
       setCombo(prev => prev + 1);
       setAttackAnimation('hero_laser');
     } else {
-      if (!isMuted) new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3').play().catch(() => {});
+      if (!isMuted) new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3').play().catch(() => { });
       setEarnedPoints(0);
       setCombo(0);
       setLives(prev => prev - 1);
@@ -186,7 +186,7 @@ export default function Game() {
       await fetch('/api/students', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, className, score, avatar })
+        body: JSON.stringify({ name, className, score, avatar, status })
       });
 
       localStorage.setItem('student_score', score.toString());
@@ -213,18 +213,18 @@ export default function Game() {
     return (
       <main className="page-container" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
         <div className="glass-panel max-w-4xl w-full" style={{ padding: '0', overflow: 'hidden', border: '1px solid rgba(102, 252, 241, 0.2)', position: 'relative' }}>
-          
+
           {/* Header Accent */}
           <div style={{ height: '4px', background: 'linear-gradient(90deg, transparent, var(--accent-cyan), transparent)' }}></div>
-          
+
           <div style={{ padding: '3rem 2rem' }}>
             {/* Mission Badge */}
-            <div style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '8px', 
-              padding: '6px 16px', 
-              background: 'rgba(102, 252, 241, 0.1)', 
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '6px 16px',
+              background: 'rgba(102, 252, 241, 0.1)',
               borderRadius: '100px',
               border: '1px solid rgba(102, 252, 241, 0.2)',
               color: 'var(--accent-cyan)',
@@ -245,53 +245,53 @@ export default function Game() {
             </p>
 
             {/* Rules Grid */}
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-              gap: '1.5rem', 
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '1.5rem',
               textAlign: 'left',
               marginBottom: '4rem'
             }}>
               {[
-                { 
-                  icon: <Zap size={24} />, 
-                  title: 'Sistem Skor (Combo)', 
+                {
+                  icon: <Zap size={24} />,
+                  title: 'Sistem Skor (Combo)',
                   desc: 'Setiap jawaban benar memberikan 100 poin. Jawaban beruntun menambah +50 poin combo.',
                   color: 'var(--accent-cyan)'
                 },
-                { 
-                  icon: <Wrench size={24} />, 
-                  title: 'Bantuan (Lifelines)', 
+                {
+                  icon: <Wrench size={24} />,
+                  title: 'Bantuan (Lifelines)',
                   desc: 'Hack 50:50 (Hapus 2 salah) & Bypass Sistem (Flat 100 poin, reset combo).',
                   color: 'var(--warning)'
                 },
-                { 
-                  icon: <Heart size={24} />, 
-                  title: 'Pertahanan (Lives)', 
+                {
+                  icon: <Heart size={24} />,
+                  title: 'Pertahanan (Lives)',
                   desc: 'Anda memiliki 3 Nyawa. Jawaban salah mengurangi nyawa. Nyawa habis = Misi Gagal.',
                   color: 'var(--danger)'
                 },
-                { 
-                  icon: <ShieldCheck size={24} />, 
-                  title: 'Syarat Kelulusan', 
+                {
+                  icon: <ShieldCheck size={24} />,
+                  title: 'Syarat Kelulusan',
                   desc: 'Capai minimal 15.000 poin ATAU selesaikan seluruh 30 skenario untuk menang.',
                   color: 'var(--success)'
                 }
               ].map((rule, i) => (
-                <div key={i} style={{ 
-                  background: 'rgba(255,255,255,0.03)', 
-                  padding: '1.5rem', 
+                <div key={i} style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  padding: '1.5rem',
                   borderRadius: '20px',
                   border: '1px solid rgba(255,255,255,0.05)',
                   display: 'flex',
                   gap: '1.25rem',
                   transition: 'all 0.3s ease'
                 }}
-                className="rule-card"
+                  className="rule-card"
                 >
-                  <div style={{ 
-                    width: '50px', 
-                    height: '50px', 
+                  <div style={{
+                    width: '50px',
+                    height: '50px',
                     flexShrink: 0,
                     background: `${rule.color}15`,
                     borderRadius: '14px',
@@ -311,14 +311,14 @@ export default function Game() {
               ))}
             </div>
 
-            <button 
+            <button
               onClick={() => setIsReady(true)}
               className="btn-primary"
-              style={{ 
-                width: '100%', 
+              style={{
+                width: '100%',
                 maxWidth: '400px',
-                padding: '1.5rem', 
-                fontSize: '1.2rem', 
+                padding: '1.5rem',
+                fontSize: '1.2rem',
                 fontWeight: '900',
                 gap: '12px',
                 margin: '0 auto',
@@ -337,7 +337,8 @@ export default function Game() {
             </p>
           </div>
         </div>
-        <style dangerouslySetInnerHTML={{__html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           .rule-card:hover {
             background: rgba(255,255,255,0.06) !important;
             border-color: rgba(102, 252, 241, 0.3) !important;
@@ -362,7 +363,7 @@ export default function Game() {
         {/* HUD (Heads Up Display) */}
         <div className="flex justify-between items-center mb-6 bg-black/40 p-4 rounded-xl border border-white/10">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <button 
+            <button
               onClick={() => setShowExitConfirm(true)}
               style={{
                 width: '42px',
@@ -394,7 +395,7 @@ export default function Game() {
               <Home size={20} />
             </button>
 
-            <button 
+            <button
               onClick={() => setIsMuted(!isMuted)}
               style={{
                 width: '42px',
@@ -453,11 +454,11 @@ export default function Game() {
         </div>
 
         {/* BATTLE ARENA (RPG Style) */}
-        <div className="battle-arena" style={{ 
-          position: 'relative', 
-          display: 'flex', 
-          flexDirection: 'row', 
-          justifyContent: 'space-between', 
+        <div className="battle-arena" style={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           alignItems: 'center',
           backgroundColor: 'rgba(0,0,0,0.8)',
           borderRadius: '20px',
@@ -755,13 +756,13 @@ export default function Game() {
               boxShadow: '0 0 60px rgba(102, 252, 241, 0.4)',
               animation: 'fadeIn 0.3s ease-out'
             }}>
-              <div style={{ 
-                width: '80px', 
-                height: '80px', 
-                backgroundColor: 'rgba(102, 252, 241, 0.1)', 
-                borderRadius: '50%', 
-                display: 'flex', 
-                alignItems: 'center', 
+              <div style={{
+                width: '80px',
+                height: '80px',
+                backgroundColor: 'rgba(102, 252, 241, 0.1)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 1.5rem',
                 border: '1px solid rgba(102, 252, 241, 0.3)'
@@ -773,7 +774,7 @@ export default function Game() {
                 Seluruh progres dan skor Anda saat ini akan hilang. Tetap ingin keluar?
               </p>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button 
+                <button
                   onClick={() => setShowExitConfirm(false)}
                   style={{
                     flex: 1,
@@ -791,7 +792,7 @@ export default function Game() {
                 >
                   BATAL
                 </button>
-                <button 
+                <button
                   onClick={() => router.push('/')}
                   style={{
                     flex: 1,
