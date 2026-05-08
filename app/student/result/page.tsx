@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trophy, Home, RotateCcw, Skull, Medal, Users } from 'lucide-react';
+import { Trophy, Home, RotateCcw, Skull, Medal, Users, AlertTriangle } from 'lucide-react';
 
 interface StudentData {
   id: number;
@@ -91,50 +91,81 @@ export default function StudentResult() {
               : `Luar biasa, ${name}! Anda telah menyelesaikan seluruh Misi Literasi Digital dengan aman.`}
           </p>
           
-          <div style={{ background: 'rgba(0,0,0,0.4)', padding: '1.5rem', borderRadius: '20px', marginBottom: '2rem', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <h3 style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>SKOR ANDA</h3>
+          <div style={{ background: 'rgba(0,0,0,0.4)', padding: '1.5rem', borderRadius: '20px', marginBottom: '1.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <h3 style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>SKOR AKHIR</h3>
             <div style={{ 
               fontSize: '4.5rem', 
               fontWeight: '900', 
               lineHeight: '1', 
-              color: '#ffffff',
-              textShadow: isGameOver ? '0 0 15px rgba(231, 76, 60, 0.8)' : '0 0 15px rgba(46, 204, 113, 0.8)'
+              color: score >= 20000 ? 'var(--success)' : '#ffffff',
+              textShadow: score >= 20000 ? '0 0 20px rgba(46, 204, 113, 0.5)' : 'none'
             }}>
-              {score}
+              {score.toLocaleString()}
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          {/* Pesan Instruksi */}
+          <div style={{ 
+            background: score >= 20000 ? 'rgba(46, 204, 113, 0.05)' : 'rgba(231, 76, 60, 0.05)', 
+            padding: '1.5rem', 
+            borderRadius: '16px', 
+            marginBottom: '2.5rem',
+            border: score >= 20000 ? '1px solid rgba(46, 204, 113, 0.2)' : '1px solid rgba(231, 76, 60, 0.2)',
+            textAlign: 'left'
+          }}>
+            {score >= 20000 ? (
+              <>
+                <p style={{ color: 'var(--success)', fontWeight: '800', marginBottom: '10px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Medal size={20} /> KRITERIA LULUS TERCAPAI
+                </p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
+                  Selamat! Meskipun misi Anda mungkin ada kendala, karena skor Anda sudah mencapai minimal <strong>20.000</strong>, Anda telah dinyatakan kompeten dan tidak perlu mengulangi permainan ini.
+                  <br/><br/>
+                  <span style={{ color: '#fff', fontWeight: 'bold' }}>📸 PENTING:</span> Silakan <strong>Screenshot</strong> halaman ini sekarang sebagai bukti dan kirimkan ke <strong>WhatsApp Guru</strong> Anda.
+                </p>
+              </>
+            ) : (
+              <>
+                <p style={{ color: 'var(--danger)', fontWeight: '800', marginBottom: '10px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <AlertTriangle size={20} /> SKOR BELUM MENCAPAI TARGET
+                </p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
+                  Maaf, skor Anda masih di bawah <strong>20.000</strong>. Anda harus mengulangi misi ini untuk mencapai standar kompetensi.
+                  <br/><br/>
+                  Gunakan tombol <strong>Ulangi Sekarang</strong> di bawah untuk langsung mencoba kembali. Jika Anda kembali ke beranda, maka progres belajar akan tereset dan Anda harus mengulang materi dari awal.
+                </p>
+              </>
+            )}
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <button 
-              style={{
-                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
-                padding: '1rem', borderRadius: '14px', border: 'none',
-                background: isGameOver ? 'linear-gradient(135deg, #e74c3c, #8e44ad)' : 'linear-gradient(135deg, var(--accent-cyan), #3b82f6)',
-                color: isGameOver ? '#ffffff' : '#000000',
-                fontWeight: '800', cursor: 'pointer', transition: 'all 0.3s ease'
-              }}
               onClick={() => {
                 localStorage.removeItem('student_score');
                 localStorage.removeItem('student_status');
                 router.push('/student/game');
               }}
+              className="btn-primary"
+              style={{ 
+                width: '100%', gap: '12px', fontSize: '1.1rem', padding: '16px',
+                background: score >= 20000 ? 'rgba(255,255,255,0.1)' : 'linear-gradient(135deg, var(--accent-cyan), #3b82f6)',
+                color: score >= 20000 ? '#fff' : '#000',
+                border: score >= 20000 ? '1px solid rgba(255,255,255,0.2)' : 'none'
+              }}
             >
-              <RotateCcw size={18} /> ULANGI
+              <RotateCcw size={20} /> ULANGI SEKARANG
             </button>
             
             <button 
-              style={{
-                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
-                padding: '1rem', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.1)',
-                background: 'rgba(255,255,255,0.05)', color: '#fff',
-                fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s ease'
-              }}
               onClick={() => {
-                localStorage.clear();
+                localStorage.removeItem('materi_finished');
+                localStorage.removeItem('finished_materi_tabs');
                 router.push('/');
               }}
+              className="btn-secondary"
+              style={{ width: '100%', gap: '12px', padding: '14px' }}
             >
-              <Home size={18} /> BERANDA
+              <Home size={20} /> KEMBALI KE BERANDA
             </button>
           </div>
         </div>
