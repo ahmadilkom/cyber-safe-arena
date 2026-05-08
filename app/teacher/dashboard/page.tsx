@@ -168,9 +168,18 @@ export default function TeacherDashboard() {
         </div>
 
         <div className="glass-panel" style={{ overflow: 'hidden' }}>
-          <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, minWidth: '250px' }}>
-              <h3 style={{ margin: 0, whiteSpace: 'nowrap' }}>Daftar Nilai Siswa</h3>
+          <div style={{ 
+            padding: '1.5rem', 
+            borderBottom: '1px solid var(--glass-border)', 
+            display: 'flex', 
+            flexDirection: 'row', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            flexWrap: 'wrap', 
+            gap: '1rem' 
+          }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem', flex: '1', minWidth: '280px' }}>
+              <h3 style={{ margin: 0, whiteSpace: 'nowrap', fontSize: '1.25rem' }}>Daftar Nilai Siswa</h3>
                <div style={{ position: 'relative', flex: 1 }}>
                 <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
                 <input 
@@ -210,7 +219,9 @@ export default function TeacherDashboard() {
                   color: '#fff',
                   fontSize: '0.9rem',
                   outline: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  minWidth: '130px',
+                  flex: '0 1 auto'
                 }}
               >
                 <option value="">Semua Kelas</option>
@@ -226,7 +237,7 @@ export default function TeacherDashboard() {
                 <option value="9.3">9.3</option>
               </select>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               <button 
                 onClick={() => setShowResetConfirm(true)} 
                 className="btn-secondary" 
@@ -237,12 +248,25 @@ export default function TeacherDashboard() {
                   color: 'var(--danger)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px'
+                  gap: '8px',
+                  fontSize: '0.85rem'
                 }}
               >
                 <Trash2 size={16} /> Reset Semua
               </button>
-              <button onClick={fetchStudents} className="btn-secondary" style={{ padding: '8px 16px', border: 'none', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button 
+                onClick={fetchStudents} 
+                className="btn-secondary" 
+                style={{ 
+                  padding: '8px 16px', 
+                  border: '1px solid rgba(255,255,255,0.1)', 
+                  background: 'rgba(255,255,255,0.05)', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px',
+                  fontSize: '0.85rem'
+                }}
+              >
                 <RefreshCw size={16} className={isLoading ? "animate-spin" : ""} /> Refresh
               </button>
             </div>
