@@ -20,6 +20,7 @@ export default function StudentResult() {
   const [status, setStatus] = useState<'victory' | 'game_over'>('victory');
   const [leaderboard, setLeaderboard] = useState<StudentData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showHomeConfirm, setShowHomeConfirm] = useState(false);
 
   useEffect(() => {
     const storedName = localStorage.getItem('student_name');
@@ -157,11 +158,7 @@ export default function StudentResult() {
             </button>
             
             <button 
-              onClick={() => {
-                localStorage.removeItem('materi_finished');
-                localStorage.removeItem('finished_materi_tabs');
-                router.push('/');
-              }}
+              onClick={() => setShowHomeConfirm(true)}
               className="btn-secondary"
               style={{ width: '100%', gap: '12px', padding: '14px' }}
             >
@@ -169,6 +166,45 @@ export default function StudentResult() {
             </button>
           </div>
         </div>
+
+        {/* Home Confirmation Modal */}
+        {showHomeConfirm && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '20px'
+          }}>
+            <div className="glass-panel" style={{ padding: '2.5rem', maxWidth: '450px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ background: 'rgba(231, 76, 60, 0.1)', width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                <AlertTriangle size={36} color="var(--danger)" />
+              </div>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#fff' }}>Yakin kembali ke Beranda?</h3>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.6' }}>
+                Jika Anda kembali ke Beranda, seluruh progres belajar Anda akan <strong>dihapus</strong>. Anda harus mengulang materi dari awal untuk bermain lagi.
+              </p>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button 
+                  onClick={() => setShowHomeConfirm(false)}
+                  className="btn-secondary"
+                  style={{ flex: 1, padding: '12px' }}
+                >
+                  Batal
+                </button>
+                <button 
+                  onClick={() => {
+                    localStorage.removeItem('materi_finished');
+                    localStorage.removeItem('finished_materi_tabs');
+                    router.push('/');
+                  }}
+                  className="btn-primary"
+                  style={{ flex: 1, padding: '12px', background: 'var(--danger)', color: '#fff', boxShadow: '0 0 15px rgba(231, 76, 60, 0.3)' }}
+                >
+                  Ya, Kembali
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Leaderboard Card (Now Below) */}
         <div 

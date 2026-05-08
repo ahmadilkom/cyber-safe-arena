@@ -387,9 +387,13 @@ export default function MateriLiterasi() {
                 <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                   {!finishedTabs.includes(activeTab) && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: currentMateri.color, animation: 'pulse 1s infinite' }}></div>
-                      {currentMateri.isVideo && !isYouTubeFinished 
-                        ? 'Selesaikan menonton video untuk membuka tombol' 
+                      {/* Only show circle if there is text to show */}
+                      {(!currentMateri.isVideo || !isYouTubeFinished) && (
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: currentMateri.color, animation: 'pulse 1s infinite' }}></div>
+                      )}
+                      
+                      {currentMateri.isVideo 
+                        ? (!isYouTubeFinished ? 'Selesaikan menonton video untuk membuka tombol' : '')
                         : 'Baca materi ini sampai tuntas'}
                     </span>
                   )}
@@ -428,12 +432,6 @@ export default function MateriLiterasi() {
                         {countdown > 0 ? `Tunggu (${countdown}s)` : 
                          (currentMateri.isVideo && !isYouTubeFinished ? 'Sedang Menonton...' : 'Sudah Selesai Dipelajari')}
                       </button>
-                      
-                      {currentMateri.isVideo && !isYouTubeFinished && (
-                        <p style={{ color: 'var(--danger)', fontSize: '0.85rem', textAlign: 'center', margin: 0, opacity: 0.8 }}>
-                          ⚠️ Tonton video hingga detik terakhir untuk membuka tombol
-                        </p>
-                      )}
                     </div>
                   ) : activeTab === materiData[materiData.length - 1].id ? (
                     <button
