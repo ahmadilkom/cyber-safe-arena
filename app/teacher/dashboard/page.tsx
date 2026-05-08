@@ -22,6 +22,10 @@ export default function TeacherDashboard() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const isAuth = localStorage.getItem('teacher_auth');
@@ -89,6 +93,18 @@ export default function TeacherDashboard() {
     }
   };
 
+
+  const filteredStudents = students.filter(s => {
+    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesClass = filterClass === '' || s.class_name === filterClass;
+    return matchesSearch && matchesClass;
+  });
+
+  // Reset page when filtering
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterClass]);
+
   if (isLoading && students.length === 0) {
     return (
       <main className="page-container">
@@ -97,11 +113,9 @@ export default function TeacherDashboard() {
     );
   }
 
-  const filteredStudents = students.filter(s => {
-    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesClass = filterClass === '' || s.class_name === filterClass;
-    return matchesSearch && matchesClass;
-  });
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedStudents = filteredStudents.slice(startIndex, startIndex + itemsPerPage);
 
   const averageScore = filteredStudents.length > 0 
     ? Math.round(filteredStudents.reduce((acc, curr) => acc + curr.score, 0) / filteredStudents.length)
@@ -284,14 +298,14 @@ export default function TeacherDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {filteredStudents.length === 0 ? (
+                {paginatedStudents.length === 0 ? (
                   <tr>
                     <td colSpan={5} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
                       {searchTerm || filterClass ? 'Tidak ada data yang sesuai filter' : 'Belum ada siswa yang bermain.'}
                     </td>
                   </tr>
                 ) : (
-                  filteredStudents.map((student) => (
+                  paginatedStudents.map((student) => (
                     <tr key={student.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                       <td style={{ padding: '1rem 1.5rem', fontWeight: '500' }}>{student.name}</td>
                       <td style={{ padding: '1rem 1.5rem' }}>{student.class_name}</td>
@@ -341,6 +355,90 @@ export default function TeacherDashboard() {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          {filteredStudents.length > itemsPerPage && (
+            <div style={{ 
+              padding: '1rem 1.5rem', 
+              borderTop: '1px solid var(--glass-border)', 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '1rem'
+            }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                Menampilkan {startIndex + 1} - {Math.min(startIndex + itemsPerPage, filteredStudents.length)} dari {filteredStudents.length} siswa
+              </p>
+              
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => prev - 1)}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    background: currentPage === 1 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: currentPage === 1 ? 'rgba(255,255,255,0.2)' : '#fff',
+                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  Sebelumnya
+                </button>
+                
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  {[...Array(totalPages)].map((_, i) => {
+                    const page = i + 1;
+                    // Show current page, and some surrounding pages if many
+                    if (totalPages > 5) {
+                      if (page !== 1 && page !== totalPages && Math.abs(page - currentPage) > 1) {
+                        if (Math.abs(page - currentPage) === 2) return <span key={i} style={{ color: 'var(--text-secondary)' }}>...</span>;
+                        return null;
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentPage(page)}
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '8px',
+                          background: currentPage === page ? 'var(--accent-cyan)' : 'transparent',
+                          border: 'none',
+                          color: currentPage === page ? '#000' : 'var(--text-secondary)',
+                          cursor: 'pointer',
+                          fontWeight: 'bold',
+                          fontSize: '0.85rem'
+                        }}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    background: currentPage === totalPages ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: currentPage === totalPages ? 'rgba(255,255,255,0.2)' : '#fff',
+                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  Selanjutnya
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Logout Confirmation Modal */}
