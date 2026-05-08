@@ -45,6 +45,7 @@ export default function Game() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isFinished, setIsFinished] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const [gameScenarios, setGameScenarios] = useState<Scenario[]>([]);
 
@@ -207,6 +208,145 @@ export default function Game() {
   }
 
   if (isFinished) return null;
+
+  if (!isReady) {
+    return (
+      <main className="page-container" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div className="glass-panel max-w-4xl w-full" style={{ padding: '0', overflow: 'hidden', border: '1px solid rgba(102, 252, 241, 0.2)', position: 'relative' }}>
+          
+          {/* Header Accent */}
+          <div style={{ height: '4px', background: 'linear-gradient(90deg, transparent, var(--accent-cyan), transparent)' }}></div>
+          
+          <div style={{ padding: '3rem 2rem' }}>
+            {/* Mission Badge */}
+            <div style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '8px', 
+              padding: '6px 16px', 
+              background: 'rgba(102, 252, 241, 0.1)', 
+              borderRadius: '100px',
+              border: '1px solid rgba(102, 252, 241, 0.2)',
+              color: 'var(--accent-cyan)',
+              fontSize: '0.75rem',
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              marginBottom: '1.5rem'
+            }}>
+              <Bot size={14} /> Mission Briefing v1.0
+            </div>
+
+            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: '950', marginBottom: '1rem', lineHeight: '1.1', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+              Siap Untuk <span className="text-gradient">Misi?</span>
+            </h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', marginBottom: '3rem' }}>
+              Pelajari protokol sistem dan skema penilaian sebelum memasuki Arena Cyber. Fokus dan ketelitian adalah kunci keberhasilan.
+            </p>
+
+            {/* Rules Grid */}
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+              gap: '1.5rem', 
+              textAlign: 'left',
+              marginBottom: '4rem'
+            }}>
+              {[
+                { 
+                  icon: <Zap size={24} />, 
+                  title: 'Sistem Skor (Combo)', 
+                  desc: 'Setiap jawaban benar memberikan 100 poin. Jawaban beruntun menambah +50 poin combo.',
+                  color: 'var(--accent-cyan)'
+                },
+                { 
+                  icon: <Wrench size={24} />, 
+                  title: 'Bantuan (Lifelines)', 
+                  desc: 'Hack 50:50 (Hapus 2 salah) & Bypass Sistem (Flat 100 poin, reset combo).',
+                  color: 'var(--warning)'
+                },
+                { 
+                  icon: <Heart size={24} />, 
+                  title: 'Pertahanan (Lives)', 
+                  desc: 'Anda memiliki 3 Nyawa. Jawaban salah mengurangi nyawa. Nyawa habis = Misi Gagal.',
+                  color: 'var(--danger)'
+                },
+                { 
+                  icon: <ShieldCheck size={24} />, 
+                  title: 'Syarat Kelulusan', 
+                  desc: 'Capai minimal 15.000 poin ATAU selesaikan seluruh 30 skenario untuk menang.',
+                  color: 'var(--success)'
+                }
+              ].map((rule, i) => (
+                <div key={i} style={{ 
+                  background: 'rgba(255,255,255,0.03)', 
+                  padding: '1.5rem', 
+                  borderRadius: '20px',
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  display: 'flex',
+                  gap: '1.25rem',
+                  transition: 'all 0.3s ease'
+                }}
+                className="rule-card"
+                >
+                  <div style={{ 
+                    width: '50px', 
+                    height: '50px', 
+                    flexShrink: 0,
+                    background: `${rule.color}15`,
+                    borderRadius: '14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: rule.color,
+                    border: `1px solid ${rule.color}30`
+                  }}>
+                    {rule.icon}
+                  </div>
+                  <div>
+                    <h4 style={{ color: '#fff', fontWeight: '700', marginBottom: '6px', fontSize: '1.05rem' }}>{rule.title}</h4>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: '1.5' }}>{rule.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button 
+              onClick={() => setIsReady(true)}
+              className="btn-primary"
+              style={{ 
+                width: '100%', 
+                maxWidth: '400px',
+                padding: '1.5rem', 
+                fontSize: '1.2rem', 
+                fontWeight: '900',
+                gap: '12px',
+                margin: '0 auto',
+                display: 'flex',
+                boxShadow: '0 20px 40px rgba(102, 252, 241, 0.2)'
+              }}
+            >
+              MULAI MISI SEKARANG <FastForward size={22} fill="currentColor" />
+            </button>
+          </div>
+
+          {/* Footer Accent */}
+          <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.3)', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+            <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+              CyberSafe Security Protocols Active
+            </p>
+          </div>
+        </div>
+        <style dangerouslySetInnerHTML={{__html: `
+          .rule-card:hover {
+            background: rgba(255,255,255,0.06) !important;
+            border-color: rgba(102, 252, 241, 0.3) !important;
+            transform: translateY(-5px);
+          }
+        `}} />
+      </main>
+    );
+  }
 
   const currentScenario = gameScenarios[currentStep];
   const isGameOverNext = showFeedback && lives === 0 && !currentScenario.options[selectedOption!].isCorrect;
