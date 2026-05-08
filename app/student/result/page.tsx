@@ -53,6 +53,7 @@ export default function StudentResult() {
   }, [router]);
 
   const isGameOver = status === 'game_over';
+  const isLulus = score >= 15000 || status === 'victory';
 
   return (
     <main className="page-container" style={{ padding: '4rem 1rem', overflowY: 'auto', display: 'block' }}>
@@ -98,8 +99,8 @@ export default function StudentResult() {
               fontSize: '4.5rem', 
               fontWeight: '900', 
               lineHeight: '1', 
-              color: score >= 20000 ? 'var(--success)' : '#ffffff',
-              textShadow: score >= 20000 ? '0 0 20px rgba(46, 204, 113, 0.5)' : 'none'
+              color: isLulus ? 'var(--success)' : '#ffffff',
+              textShadow: isLulus ? '0 0 20px rgba(46, 204, 113, 0.5)' : 'none'
             }}>
               {score.toLocaleString()}
             </div>
@@ -107,20 +108,24 @@ export default function StudentResult() {
 
           {/* Pesan Instruksi */}
           <div style={{ 
-            background: score >= 20000 ? 'rgba(46, 204, 113, 0.05)' : 'rgba(231, 76, 60, 0.05)', 
+            background: isLulus ? 'rgba(46, 204, 113, 0.05)' : 'rgba(231, 76, 60, 0.05)', 
             padding: '1.5rem', 
             borderRadius: '16px', 
             marginBottom: '2.5rem',
-            border: score >= 20000 ? '1px solid rgba(46, 204, 113, 0.2)' : '1px solid rgba(231, 76, 60, 0.2)',
+            border: isLulus ? '1px solid rgba(46, 204, 113, 0.2)' : '1px solid rgba(231, 76, 60, 0.2)',
             textAlign: 'left'
           }}>
-            {score >= 20000 ? (
+            {isLulus ? (
               <>
                 <p style={{ color: 'var(--success)', fontWeight: '800', marginBottom: '10px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Medal size={20} /> KRITERIA LULUS TERCAPAI
+                  <Medal size={20} /> MISI SELESAI / KOMPETEN
                 </p>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
-                  Selamat! Meskipun misi Anda mungkin ada kendala, karena skor Anda sudah mencapai minimal <strong>20.000</strong>, Anda telah dinyatakan kompeten dan tidak perlu mengulangi permainan ini.
+                  {status === 'victory' 
+                    ? "Selamat! Anda berhasil menyelesaikan seluruh rangkaian misi literasi digital hingga akhir." 
+                    : "Luar biasa! Walaupun sistem Anda sempat terhenti, skor tinggi Anda menunjukkan pemahaman yang sangat baik."}
+                  <br/><br/>
+                  Karena Anda sudah memenuhi kriteria kelulusan, Anda tidak perlu mengulangi permainan ini.
                   <br/><br/>
                   <span style={{ color: '#fff', fontWeight: 'bold' }}>📸 PENTING:</span> Silakan <strong>Screenshot</strong> halaman ini sekarang sebagai bukti dan kirimkan ke <strong>WhatsApp Guru</strong> Anda.
                 </p>
@@ -128,34 +133,46 @@ export default function StudentResult() {
             ) : (
               <>
                 <p style={{ color: 'var(--danger)', fontWeight: '800', marginBottom: '10px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <AlertTriangle size={20} /> SKOR BELUM MENCAPAI TARGET
+                  <AlertTriangle size={20} /> BELUM MEMENUHI KRITERIA
                 </p>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', margin: 0 }}>
-                  Maaf, skor Anda masih di bawah <strong>20.000</strong>. Anda harus mengulangi misi ini untuk mencapai standar kompetensi.
+                  Maaf, skor Anda masih di bawah <strong>15.000</strong> dan Anda belum berhasil menyelesaikan seluruh misi. 
+                  Siswa wajib menyelesaikan misi atau mencapai skor target untuk dinyatakan kompeten.
                   <br/><br/>
-                  Gunakan tombol <strong>Ulangi Sekarang</strong> di bawah untuk langsung mencoba kembali. Jika Anda kembali ke beranda, maka progres belajar akan tereset dan Anda harus mengulang materi dari awal.
+                  Gunakan tombol <strong>Ulangi Sekarang</strong> di bawah untuk mencoba kembali. Jika kembali ke beranda, progres belajar akan tereset.
                 </p>
               </>
             )}
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <button 
-              onClick={() => {
-                localStorage.removeItem('student_score');
-                localStorage.removeItem('student_status');
-                router.push('/student/game');
-              }}
-              className="btn-primary"
-              style={{ 
-                width: '100%', gap: '12px', fontSize: '1.1rem', padding: '16px',
-                background: score >= 20000 ? 'rgba(255,255,255,0.1)' : 'linear-gradient(135deg, var(--accent-cyan), #3b82f6)',
-                color: score >= 20000 ? '#fff' : '#000',
-                border: score >= 20000 ? '1px solid rgba(255,255,255,0.2)' : 'none'
-              }}
-            >
-              <RotateCcw size={20} /> ULANGI SEKARANG
-            </button>
+            {!isLulus && (
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('student_score');
+                  localStorage.removeItem('student_status');
+                  router.push('/student/game');
+                }}
+                className="btn-primary"
+                style={{ width: '100%', gap: '12px', fontSize: '1.1rem', padding: '16px' }}
+              >
+                <RotateCcw size={20} /> ULANGI SEKARANG
+              </button>
+            )}
+            
+            {isLulus && (
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('student_score');
+                  localStorage.removeItem('student_status');
+                  router.push('/student/game');
+                }}
+                className="btn-secondary"
+                style={{ width: '100%', gap: '12px', padding: '14px', border: '1px solid rgba(255,255,255,0.1)' }}
+              >
+                <RotateCcw size={20} /> COBA LAGI (TINGKATKAN SKOR)
+              </button>
+            )}
             
             <button 
               onClick={() => setShowHomeConfirm(true)}
