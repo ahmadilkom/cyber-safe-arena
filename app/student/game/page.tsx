@@ -183,18 +183,23 @@ export default function Game() {
     const avatar = localStorage.getItem('student_avatar');
 
     try {
-      await fetch('/api/students', {
+      const response = await fetch('/api/students', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, className, score, avatar, status })
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.details || 'Gagal menyimpan data ke server');
+      }
+
       localStorage.setItem('student_score', score.toString());
       localStorage.setItem('student_status', status);
       router.push('/student/result');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert('Gagal menyimpan nilai.');
+      alert(`Gagal menyimpan nilai: ${error.message}`);
       setIsSaving(false);
     }
   };
