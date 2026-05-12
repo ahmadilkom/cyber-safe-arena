@@ -54,7 +54,16 @@ export async function GET() {
 
     if (error) throw error;
 
-    return NextResponse.json({ students });
+    return NextResponse.json(
+      { students },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
   } catch (error: any) {
     console.error('Failed to fetch students from Supabase:', error);
     return NextResponse.json(
@@ -98,9 +107,16 @@ export async function DELETE(request: Request) {
 
     if (error) throw error;
 
-    console.log(`Deleted student with ID: ${id}, rows affected: ${count}`);
+    if (count === 0) {
+      console.error(`Failed to delete: No student found with ID ${numericId}. This might be due to RLS policies.`);
+      return NextResponse.json(
+        { error: 'Data tidak ditemukan atau Anda tidak memiliki izin untuk menghapus.', count: 0 },
+        { status: 404 }
+      );
+    }
 
-    return NextResponse.json({ success: true });
+    console.log(`Successfully deleted student with ID: ${id}, rows affected: ${count}`);
+    return NextResponse.json({ success: true, count });
   } catch (error: any) {
     console.error('Failed to delete student from Supabase:', error);
     return NextResponse.json(

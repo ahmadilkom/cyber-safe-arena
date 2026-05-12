@@ -67,10 +67,13 @@ export default function TeacherDashboard() {
       if (response.ok) {
         setStudents(students.filter(s => s.id !== id));
         setShowDeleteConfirm(null);
+      } else {
+        const errorData = await response.json();
+        alert(`Gagal menghapus: ${errorData.error || 'Terjadi kesalahan sistem.'}`);
       }
     } catch (error) {
       console.error('Failed to delete student', error);
-      alert('Gagal menghapus data.');
+      alert('Gagal menghapus data. Periksa koneksi internet Anda.');
     } finally {
       setIsDeleting(false);
     }
