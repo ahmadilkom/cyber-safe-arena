@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -86,12 +88,17 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    const { error } = await supabase
+    // Ensure id is treated as a number if it's numeric
+    const numericId = !isNaN(Number(id)) ? Number(id) : id;
+
+    const { error, count } = await supabase
       .from('students')
-      .delete()
-      .eq('id', id);
+      .delete({ count: 'exact' })
+      .eq('id', numericId);
 
     if (error) throw error;
+
+    console.log(`Deleted student with ID: ${id}, rows affected: ${count}`);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

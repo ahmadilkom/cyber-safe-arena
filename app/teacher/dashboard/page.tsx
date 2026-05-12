@@ -41,7 +41,7 @@ export default function TeacherDashboard() {
   const fetchStudents = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/students');
+      const response = await fetch('/api/students', { cache: 'no-store' });
       const data = await response.json();
       if (data.students) {
         setStudents(data.students);

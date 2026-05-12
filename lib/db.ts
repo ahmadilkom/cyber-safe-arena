@@ -30,15 +30,18 @@ async function initDb(db: Database) {
       name TEXT NOT NULL,
       class_name TEXT NOT NULL,
       avatar TEXT,
+      status TEXT DEFAULT 'game_over',
       score INTEGER DEFAULT 0,
       played_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
 
-  // Migrasi jika kolom avatar belum ada
+  // Migrasi jika kolom avatar atau status belum ada
   try {
     await db.exec('ALTER TABLE students ADD COLUMN avatar TEXT');
-  } catch (e) {
-    // Column already exists, ignore error
-  }
+  } catch (e) {}
+
+  try {
+    await db.exec('ALTER TABLE students ADD COLUMN status TEXT DEFAULT "game_over"');
+  } catch (e) {}
 }
